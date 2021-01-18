@@ -1,0 +1,12 @@
+.box {
+    width: 500px;
+    margin: 50px auto;
+    border-radius: 5px;
+    box-shadow: 0 0 10px #000;
+    box-sizing: border-box;
+    padding: 12px 20px 10px;
+}
+
+.h3 {
+    text-align: center;
+}
