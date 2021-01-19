@@ -10,3 +10,28 @@
 .h3 {
     text-align: center;
 }
+
+.check-flag {
+    color: #32d732;
+}
+
+.date-info, .author-answer {
+    text-align: end;
+}
+
+.answer {
+    border-bottom: 1px solid #5f9ea0;
+}
+
+.answer-list {
+    margin-bottom: 10px;
+}
+
+.answer-form > .form-group > label {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.answer-form > .form-group > .col-8 {
+    padding-left: 0;
+}
