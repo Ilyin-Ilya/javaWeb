@@ -3,17 +3,17 @@ package ua.karazin.ilyin.javaweb.entity;
 import java.sql.Date;
 
 public class Answer {
-    private long answer_id;
+    private int answer_id;
     private String answer_body;
-    private long author_id;
+    private int author_id;
     private java.sql.Date date_answered;
-    private long question_id;
+    private int question_id;
     private boolean is_answer;
 
     public Answer() {
     }
 
-    public Answer(long answer_id, String answer_body, long author_id, Date date_answered, long question_id, boolean is_answer) {
+    public Answer(int answer_id, String answer_body, int author_id, Date date_answered, int question_id, boolean is_answer) {
         this.answer_id = answer_id;
         this.answer_body = answer_body;
         this.author_id = author_id;
@@ -22,11 +22,11 @@ public class Answer {
         this.is_answer = is_answer;
     }
 
-    public long getAnswer_id() {
+    public int getAnswer_id() {
         return answer_id;
     }
 
-    public void setAnswer_id(long answer_id) {
+    public void setAnswer_id(int answer_id) {
         this.answer_id = answer_id;
     }
 
@@ -38,11 +38,11 @@ public class Answer {
         this.answer_body = answer_body;
     }
 
-    public long getAuthor_id() {
+    public int getAuthor_id() {
         return author_id;
     }
 
-    public void setAuthor_id(long author_id) {
+    public void setAuthor_id(int author_id) {
         this.author_id = author_id;
     }
 
@@ -54,11 +54,11 @@ public class Answer {
         this.date_answered = date_answered;
     }
 
-    public long getQuestion_id() {
+    public int getQuestion_id() {
         return question_id;
     }
 
-    public void setQuestion_id(long question_id) {
+    public void setQuestion_id(int question_id) {
         this.question_id = question_id;
     }
 

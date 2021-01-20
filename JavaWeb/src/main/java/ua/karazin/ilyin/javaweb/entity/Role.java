@@ -2,22 +2,22 @@ package ua.karazin.ilyin.javaweb.entity;
 
 public class Role {
 
-    private long id;
+    private int id;
     private String title;
 
     public Role() {
     }
 
-    public Role(long id, String title) {
+    public Role(int id, String title) {
         this.id = id;
         this.title = title;
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

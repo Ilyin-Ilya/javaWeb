@@ -3,16 +3,16 @@ package ua.karazin.ilyin.javaweb.entity;
 import java.sql.Date;
 
 public class Question {
-    private long question_id;
+    private int question_id;
     private String question_body;
-    private long author_id;
+    private int author_id;
     private java.sql.Date date_created;
     private boolean status;
 
     public Question() {
     }
 
-    public Question(long question_id, String question_body, long author_id, Date date_created, boolean status) {
+    public Question(int question_id, String question_body, int author_id, Date date_created, boolean status) {
         this.question_id = question_id;
         this.question_body = question_body;
         this.author_id = author_id;
@@ -20,7 +20,7 @@ public class Question {
         this.status = status;
     }
 
-    public long getQuestion_id() {
+    public int getQuestion_id() {
         return question_id;
     }
 
@@ -28,7 +28,7 @@ public class Question {
         return question_body;
     }
 
-    public long getAuthor_id() {
+    public int getAuthor_id() {
         return author_id;
     }
 
@@ -40,7 +40,7 @@ public class Question {
         return status;
     }
 
-    public void setQuestion_id(long question_id) {
+    public void setQuestion_id(int question_id) {
         this.question_id = question_id;
     }
 
@@ -48,7 +48,7 @@ public class Question {
         this.question_body = question_body;
     }
 
-    public void setAuthor_id(long author_id) {
+    public void setAuthor_id(int author_id) {
         this.author_id = author_id;
     }
 
