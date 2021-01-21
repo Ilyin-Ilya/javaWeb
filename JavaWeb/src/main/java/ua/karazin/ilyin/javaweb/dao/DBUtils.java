@@ -2,6 +2,7 @@ package ua.karazin.ilyin.javaweb.dao;
 
 import ua.karazin.ilyin.javaweb.entity.Answer;
 import ua.karazin.ilyin.javaweb.entity.Question;
+import ua.karazin.ilyin.javaweb.entity.Role;
 import ua.karazin.ilyin.javaweb.entity.User;
 
 import java.io.IOException;
@@ -11,8 +12,9 @@ import java.util.ArrayList;
 
 public class DBUtils {
 
-    public Connection setConnection(String url) throws IOException, ClassNotFoundException, SQLException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+    public Connection setConnection() throws IOException, ClassNotFoundException, SQLException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         String username = "root";
+        String url = "jdbc:mysql://localhost/javaWeb?serverTimezone=Europe/Moscow&useSSL=false";
         String password = "fateLol98";
         Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
         Connection conn = DriverManager.getConnection(url, username, password);
@@ -21,12 +23,12 @@ public class DBUtils {
 
     public boolean addQuestion(Question question, Connection conn) throws SQLException {
         try {
-            String query = "INSERT INTO `question` VALUES (?,?,?)";
+            String query = "INSERT INTO `question` VALUES (?,?,?,?)";
             PreparedStatement preparedStatement = conn.prepareStatement(query);
             preparedStatement.setString(1, question.getQuestion_body());
             preparedStatement.setInt(2, question.getAuthor_id());
             preparedStatement.setDate(3, question.getDate_created());
-
+            preparedStatement.setString(4, question.getQuestion_name());
 
             int rows = preparedStatement.executeUpdate();
 
@@ -84,6 +86,7 @@ public class DBUtils {
         ArrayList<Answer> answers = new ArrayList<>();
         try {
             String query = "SELECT * FROM `answer`" +
+                    "INNER JOIN `question`" +
                     "WHERE `answer`(question_id)=" + question.getQuestion_id();
 
             Statement statement = conn.createStatement();
@@ -120,6 +123,7 @@ public class DBUtils {
                 question.setAuthor_id(resultSet.getInt(3));
                 question.setDate_created(resultSet.getDate(4));
                 question.setStatus(resultSet.getBoolean(5));
+                question.setQuestion_name(resultSet.getString(6));
                 questions.add(question);
             }
         } catch (Exception ex) {
@@ -128,5 +132,56 @@ public class DBUtils {
         return questions;
     }
 
+
+    public User findAuthor(Question question, Connection conn) {
+        ArrayList<Question> questions = new ArrayList<>();
+        try {
+            String query = "SELECT * FROM `users`" +
+                    "INNER JOIN `question` " +
+                    "ON `users`(user_id)=`question`(author)" +
+                    "where `users`(user_id)=" + question.getAuthor_id();
+
+            Statement statement = conn.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+
+            while (resultSet.next()) {
+                User user = new User();
+                user.setId(resultSet.getInt(0));
+                user.setLogin(resultSet.getString(1));
+                user.setPassword(resultSet.getString(2));
+                Role role = new Role();
+                role.setId(resultSet.getInt(4));
+                user.setRole(role);
+                Role role1 = this.findRole(user, conn);
+                user.setRole(role1);
+                return user;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return new User();
+    }
+
+    public Role findRole(User user, Connection conn) {
+        try {
+            String query = "SELECT * FROM `users`" +
+                    "INNER JOIN `role` " +
+                    "ON `users`(role)=`role`(role_id)" +
+                    "where `role`(role_id)=" + user.getRole().getId();
+
+            Statement statement = conn.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            Role role = new Role();
+            while (resultSet.next()) {
+                role.setId(resultSet.getInt(1));
+                role.setTitle(resultSet.getString(2));
+                return role;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        Role role = new Role();
+        return role;
+    }
 
 };
