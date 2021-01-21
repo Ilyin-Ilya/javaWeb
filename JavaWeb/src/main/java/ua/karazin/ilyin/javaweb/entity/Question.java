@@ -4,6 +4,7 @@ import java.sql.Date;
 
 public class Question {
     private int question_id;
+    private String question_name;
     private String question_body;
     private int author_id;
     private java.sql.Date date_created;
@@ -12,12 +13,21 @@ public class Question {
     public Question() {
     }
 
-    public Question(int question_id, String question_body, int author_id, Date date_created, boolean status) {
+    public Question(int question_id, String question_name, String question_body, int author_id, Date date_created, boolean status) {
         this.question_id = question_id;
+        this.question_name = question_name;
         this.question_body = question_body;
         this.author_id = author_id;
         this.date_created = date_created;
         this.status = status;
+    }
+
+    public void setQuestion_name(String question_name) {
+        this.question_name = question_name;
+    }
+
+    public String getQuestion_name() {
+        return question_name;
     }
 
     public int getQuestion_id() {
