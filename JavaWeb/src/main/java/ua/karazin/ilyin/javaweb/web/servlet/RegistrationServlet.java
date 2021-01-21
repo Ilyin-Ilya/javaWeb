@@ -21,7 +21,7 @@ public class RegistrationServlet extends HttpServlet {
     private DBUtils dbUtils;
 
     @Override
-    public void init() throws ServletException {
+    public void init() {
         ServletContext servletContext = getServletContext();
         dbUtils = (DBUtils) servletContext.getAttribute("db_utils");
     }
