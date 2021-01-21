@@ -1,7 +1,6 @@
 package ua.karazin.ilyin.javaweb.web.servlet;
 
 import ua.karazin.ilyin.javaweb.dao.DBUtils;
-import ua.karazin.ilyin.javaweb.entity.Role;
 import ua.karazin.ilyin.javaweb.entity.User;
 
 import javax.servlet.RequestDispatcher;
@@ -12,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Objects;
 
 @WebServlet("/login")
 public class AuthenticationServlet extends HttpServlet {
@@ -32,16 +32,19 @@ public class AuthenticationServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        User user = obtainUser(req);
 
-        
+        try {
+            User user = dbUtils.findUserLogin(req.getParameter("username"), dbUtils.setConnection());
+
+            if (Objects.equals(user.getPassword(), req.getParameter("password"))) {
+                req.getSession().setAttribute("user", user);
+                resp.sendRedirect("/api/question/info");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
-    private User obtainUser(HttpServletRequest req) {
-        User user = new User();
-        user.setLogin(req.getParameter("username"));
-        user.setPassword(req.getParameter("password"));
-        user.setRole(new Role(2, "user"));
-        return user;
-    }
 }
