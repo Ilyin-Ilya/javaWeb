@@ -132,7 +132,31 @@ public class DBUtils {
         return questions;
     }
 
+    public User findUserLogin(String login, Connection conn) {
+        try {
+            String query = "SELECT * FROM `users`" +
+                    "where `users`(login) = " + login;
 
+            Statement statement = conn.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+
+            while (resultSet.next()) {
+                User user = new User();
+                user.setId(resultSet.getInt(1));
+                user.setLogin(resultSet.getString(2));
+                user.setPassword(resultSet.getString(3));
+                Role role = new Role();
+                role.setId(resultSet.getInt(4));
+                user.setRole(role);
+                Role role1 = this.findRole(user, conn);
+                user.setRole(role1);
+                return user;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return new User();
+    }
     public User findAuthor(Question question, Connection conn) {
         ArrayList<Question> questions = new ArrayList<>();
         try {
@@ -146,9 +170,9 @@ public class DBUtils {
 
             while (resultSet.next()) {
                 User user = new User();
-                user.setId(resultSet.getInt(0));
-                user.setLogin(resultSet.getString(1));
-                user.setPassword(resultSet.getString(2));
+                user.setId(resultSet.getInt(1));
+                user.setLogin(resultSet.getString(2));
+                user.setPassword(resultSet.getString(3));
                 Role role = new Role();
                 role.setId(resultSet.getInt(4));
                 user.setRole(role);
@@ -184,4 +208,18 @@ public class DBUtils {
         return role;
     }
 
+    public Integer getSumOfAnswers(Question question, Connection conn) {
+        try {
+            String query = "SELECT COUNT(*) from `answer` " +
+                    "INNER JOIN `question` ON" +
+                    "`answer`(question_id) = " + question.getQuestion_id();
+
+            Statement statement = conn.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            return resultSet.getInt(1);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return 0;
+    }
 };
