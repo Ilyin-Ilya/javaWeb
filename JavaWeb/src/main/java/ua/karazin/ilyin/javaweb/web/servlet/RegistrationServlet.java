@@ -37,7 +37,7 @@ public class RegistrationServlet extends HttpServlet {
         User user = obtainUser(req);
         boolean isUserAdd = addUser(user);
         if (isUserAdd) {
-            resp.sendRedirect("/login");
+            resp.sendRedirect(req.getContextPath() + "/login");
         }
     }
 

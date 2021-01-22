@@ -14,7 +14,7 @@ public class DBUtils {
 
     public Connection setConnection() throws IOException, ClassNotFoundException, SQLException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         String username = "root";
-        String url = "jdbc:mysql://localhost/javaWeb?serverTimezone=Europe/Moscow&useSSL=false";
+        String url = "jdbc:mysql://localhost/forum?serverTimezone=Europe/Moscow&useSSL=false";
         String password = "fateLol98";
         Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
         Connection conn = DriverManager.getConnection(url, username, password);
@@ -23,7 +23,7 @@ public class DBUtils {
 
     public boolean addQuestion(Question question, Connection conn) throws SQLException {
         try {
-            String query = "INSERT INTO `question` VALUES (?,?,?,?)";
+            String query = "INSERT INTO `question` VALUES (NULL,?,?,?,?)";
             PreparedStatement preparedStatement = conn.prepareStatement(query);
             preparedStatement.setString(1, question.getQuestion_body());
             preparedStatement.setInt(2, question.getAuthor_id());
@@ -43,7 +43,7 @@ public class DBUtils {
 
     public boolean addUser(User user, Connection conn) {
         try {
-            String query = "INSERT INTO `users` VALUES (?,?,?)";
+            String query = "INSERT INTO `users` VALUES (NULL,?,?,?)";
             PreparedStatement preparedStatement = conn.prepareStatement(query);
             preparedStatement.setString(1, user.getLogin());
             preparedStatement.setString(2, user.getPassword());
@@ -63,7 +63,7 @@ public class DBUtils {
 
     public boolean addAnswer(Answer answer, Connection conn) {
         try {
-            String query = "INSERT INTO `answer` VALUES (?,?,?,?,?)";
+            String query = "INSERT INTO `answer` VALUES (NULL,?,?,?,?,?)";
             PreparedStatement preparedStatement = conn.prepareStatement(query);
             preparedStatement.setString(1, answer.getAnswer_body());
             preparedStatement.setInt(2, answer.getAuthor_id());
@@ -87,7 +87,7 @@ public class DBUtils {
         try {
             String query = "SELECT * FROM `answer`" +
                     "INNER JOIN `question`" +
-                    "WHERE `answer`(question_id)=" + question.getQuestion_id();
+                    "WHERE `answer`.question_id=" + question.getQuestion_id();
 
             Statement statement = conn.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
@@ -135,7 +135,8 @@ public class DBUtils {
     public User findUserLogin(String login, Connection conn) {
         try {
             String query = "SELECT * FROM `users`" +
-                    "where `users`(login) = " + login;
+                    " where `users`.login = " + "'" + login + "'";
+
 
             Statement statement = conn.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
@@ -157,13 +158,14 @@ public class DBUtils {
         }
         return new User();
     }
+
     public User findAuthor(Question question, Connection conn) {
         ArrayList<Question> questions = new ArrayList<>();
         try {
-            String query = "SELECT * FROM `users`" +
-                    "INNER JOIN `question` " +
-                    "ON `users`(user_id)=`question`(author)" +
-                    "where `users`(user_id)=" + question.getAuthor_id();
+            String query = "SELECT * FROM `users` \n" +
+                    "INNER JOIN `question` \n" +
+                    "ON `users`.user_id = `question`.author \n" +
+                    "where `users`.user_id = " + question.getAuthor_id();
 
             Statement statement = conn.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
@@ -188,10 +190,10 @@ public class DBUtils {
 
     public Role findRole(User user, Connection conn) {
         try {
-            String query = "SELECT * FROM `users`" +
-                    "INNER JOIN `role` " +
-                    "ON `users`(role)=`role`(role_id)" +
-                    "where `role`(role_id)=" + user.getRole().getId();
+            String query = "SELECT * FROM `role`\n" +
+                    "INNER JOIN `users`  \n" +
+                    "ON `users`.role = `role`.role_id\n" +
+                    "where `role`.role_id = " + user.getRole().getId();
 
             Statement statement = conn.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
@@ -210,16 +212,61 @@ public class DBUtils {
 
     public Integer getSumOfAnswers(Question question, Connection conn) {
         try {
-            String query = "SELECT COUNT(*) from `answer` " +
-                    "INNER JOIN `question` ON" +
-                    "`answer`(question_id) = " + question.getQuestion_id();
+            String query = "SELECT COUNT(*) from `answer` \n" +
+                    "INNER JOIN `question` ON \n" +
+                    "`answer`.question_id = " + question.getQuestion_id();
 
             Statement statement = conn.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
-            return resultSet.getInt(1);
+            if (resultSet.next())
+                return resultSet.getInt(1);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
         return 0;
     }
-};
+
+    public Question findQuestion(Integer question_id, Connection conn) {
+        try {
+            String query = "SELECT * FROM `question`\n" +
+                    "where `question`.question_id = " + question_id;
+
+            Statement statement = conn.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            Question question = new Question();
+            while (resultSet.next()) {
+                question.setQuestion_id(resultSet.getInt(1));
+                question.setQuestion_body(resultSet.getString(2));
+                question.setAuthor_id(resultSet.getInt(3));
+                question.setDate_created(resultSet.getDate(4));
+                question.setStatus(resultSet.getBoolean(5));
+                question.setQuestion_name(resultSet.getString(6));
+                return question;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return new Question();
+    }
+
+    public User findAnswerAuthor(Answer answer, Connection conn) {
+        try {
+            String query = "SELECT * FROM `users`\n" +
+                    "INNER JOIN `answer` \n" +
+                    "ON `answer`.author = `users`.user_id \n" +
+                    "where `answer`.answer_id = " + answer.getAnswer_id();
+
+            Statement statement = conn.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            User author = new User();
+            while (resultSet.next()) {
+                author.setId(resultSet.getInt(1));
+                author.setLogin(resultSet.getString(2));
+                return author;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return new User();
+    }
+}

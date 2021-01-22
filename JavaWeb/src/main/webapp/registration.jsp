@@ -16,7 +16,7 @@
     <div class="box">
         <h3 class="h3">Registration</h3>
 
-        <form action="/register" method="post">
+        <form action="${pageContext.request.contextPath}/register" method="post">
             <div class="form-group">
                 <div class="row">
                     <div class="col-4">

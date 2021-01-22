@@ -38,7 +38,7 @@ public class AuthenticationServlet extends HttpServlet {
 
             if (Objects.equals(user.getPassword(), req.getParameter("password"))) {
                 req.getSession().setAttribute("user", user);
-                resp.sendRedirect("/api/question/info");
+                resp.sendRedirect(req.getContextPath() + "/questions");
             }
 
         } catch (Exception e) {

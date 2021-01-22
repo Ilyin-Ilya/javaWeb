@@ -1,4 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@taglib prefix="info" tagdir="/WEB-INF/tags" %>
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -13,28 +15,13 @@
 <body>
 <div class="container">
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">Forum</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText"
-                aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarText">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="#">Questions <span class="sr-only">(current)</span></a>
-                </li>
-            </ul>
-            <span class="navbar-text">
-                Welcome, John Doe
-            </span>
-        </div>
-    </nav>
+    <info:header/>
+
     <br>
     <div class="question-info">
         <div class="row">
             <div class="col-10">
-                <h3>Snakemake qsub rule for multiple wildcards</h3>
+                <h3>${question.question_name}</h3>
             </div>
             <div class="col">
                 <button type="button" class="btn btn-primary">Ask your question</button>
@@ -42,43 +29,37 @@
         </div>
         <br>
         <p>
-            This would probably work easily if I expected the rule run to output one file at a time, but the rule run
-            can
-            output multiple files at once as seen in input and I also have to qsub the rule run for each lane of each
-            path
-            e.g. with the input example I would have to run it once for all of these lists because qsub runs once for
-            each
-            rule and I want to parallazie the bio tool runs as much as possible.
+          ${question.question_body}
         </p>
     </div>
     <div>
-        <h4>5 Answers</h4>
+        <h4>${answers.size()} Answers</h4>
     </div>
     <br>
     <div class="answer-list">
-        <div class="answer">
-            <div class="row">
-                <div class="col-3">1</div>
-                <div class="col-9">I'll try to answer your question B, and give extra details that I hope can be useful
-                    for
-                    you and others.
-
-                    Edit: I added some attempts at answering question C at the end.
+    <c:if "${answers}.size() > 0}">
+          <c:forEach var="answer" items="${answers}">
+            <div class="answer">
+                <div class="row">
+                    <div class="col-3">${answer}+1</div>
+                    <div class="col-9">${answers.get(answer).answer_body}
+                    </div>
+                </div>
+                <div class="row align-items-center">
+                    <div class="col-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor"
+                             class="bi bi-check check-flag" viewBox="0 0 16 16">
+                            <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"></path>
+                        </svg>
+                    </div>
+                    <div class="col-9">
+                        <div class="date-info">Date <strong>${answers.get(answer).date_answered}</strong></div>
+                        <div class="author-answer">Author: ${answers.get(answer).findAuthor().login}</div>
+                    </div>
                 </div>
             </div>
-            <div class="row align-items-center">
-                <div class="col-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor"
-                         class="bi bi-check check-flag" viewBox="0 0 16 16">
-                        <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"></path>
-                    </svg>
-                </div>
-                <div class="col-9">
-                    <div class="date-info">Date <strong>19.01.2020 18:27</strong></div>
-                    <div class="author-answer">Author: bli</div>
-                </div>
-            </div>
-        </div>
+               </c:forEach>
+                    </c:if>
         <div class="answer">
             <div class="row">
                 <div class="col-3">2</div>
@@ -159,7 +140,7 @@
             </div>
         </div>
     </div>
-    <form class="answer-form">
+    <form class="answer-form" method='post' action='${pageContext.request.contextPath}/answer'>
         <div class="form-group">
             <label for="textarea-answer">Your Answer</label>
             <textarea class="form-control" id="textarea-answer" rows="3" name="userAnswer"></textarea>

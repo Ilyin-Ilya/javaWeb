@@ -1,6 +1,11 @@
 package ua.karazin.ilyin.javaweb.entity;
 
+import ua.karazin.ilyin.javaweb.dao.DBUtils;
+
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.Date;
+import java.sql.SQLException;
 
 public class Answer {
     private int answer_id;
@@ -68,5 +73,10 @@ public class Answer {
 
     public void setIs_answer(boolean is_answer) {
         this.is_answer = is_answer;
+    }
+
+    public User findAuthor() throws NoSuchMethodException, IOException, InstantiationException, SQLException, IllegalAccessException, InvocationTargetException, ClassNotFoundException {
+        DBUtils dbUtils = new DBUtils();
+        return dbUtils.findAnswerAuthor(this, dbUtils.setConnection());
     }
 }
