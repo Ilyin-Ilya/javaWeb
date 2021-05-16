@@ -12,8 +12,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.sql.SQLException;
 
 @WebServlet("/register")
 public class RegistrationServlet extends HttpServlet {
@@ -45,19 +43,14 @@ public class RegistrationServlet extends HttpServlet {
         User user = new User();
         user.setLogin(req.getParameter("username"));
         user.setPassword(req.getParameter("password"));
-        user.setRole(new Role(2, "user"));
+        Role role = new Role();
+        role.setId(2);
+        role.setTitle("user");
+        user.setRole(role);
         return user;
     }
 
     private boolean addUser(User user) {
-        try {
-            return dbUtils.addUser(user, dbUtils.setConnection());
-        } catch (IOException | InstantiationException |
-                InvocationTargetException | IllegalAccessException |
-                NoSuchMethodException | SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        return false;
+        return dbUtils.addUser(user);
     }
-
 }

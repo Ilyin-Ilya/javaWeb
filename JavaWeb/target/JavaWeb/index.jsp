@@ -16,7 +16,7 @@
     <div class="box">
         <h3 class="h3">Authentication</h3>
 
-        <form method="post" action="${pageContext.request.contextPath}/login">
+        <form action="${pageContext.request.contextPath}/login" method="post">
             <div class="form-group">
                 <div class="row">
                     <div class="col-4">

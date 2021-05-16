@@ -6,7 +6,6 @@ import ua.karazin.ilyin.javaweb.entity.Question;
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
-import java.sql.Connection;
 import java.sql.SQLException;
 
 public class QuestionDisplay implements Serializable {
@@ -22,11 +21,10 @@ public class QuestionDisplay implements Serializable {
 
     public QuestionDisplay(Question question) throws NoSuchMethodException, IOException, InstantiationException, SQLException, IllegalAccessException, InvocationTargetException, ClassNotFoundException {
         DBUtils utils = new DBUtils();
-        Connection conn = utils.setConnection();
         this.sequence_number = question.getQuestion_id();
         this.question_title = question.getQuestion_name();
-        this.author = utils.findAuthor(question, conn).getLogin();
-        this.answers_number = utils.getSumOfAnswers(question, conn);
+        this.author = utils.findAuthor(question).getLogin();
+        this.answers_number = utils.getSumOfAnswers(question);
         if (!question.isStatus()) {
             this.status = "Open";
         } else {

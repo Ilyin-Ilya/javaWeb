@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 @WebServlet("/questions")
 public class QuestionListServlet extends HttpServlet {
@@ -31,7 +32,7 @@ public class QuestionListServlet extends HttpServlet {
         DBUtils utils = new DBUtils();
         try {
 
-            ArrayList<Question> questions = dbUtils.getAllQuestions(dbUtils.setConnection());
+            List<Question> questions = dbUtils.getAllQuestions();
             ArrayList<QuestionDisplay> display = new ArrayList<>();
 
             for (Question item : questions) {
