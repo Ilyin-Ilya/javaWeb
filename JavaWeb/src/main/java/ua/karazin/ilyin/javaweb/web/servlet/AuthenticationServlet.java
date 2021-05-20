@@ -4,17 +4,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 import ua.karazin.ilyin.javaweb.dao.DBUtils;
 import ua.karazin.ilyin.javaweb.entity.User;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.Objects;
 
 @Controller
+@RequestMapping("/login")
 public class AuthenticationServlet {
 
     private DBUtils dbUtils;
@@ -24,28 +23,28 @@ public class AuthenticationServlet {
         this.dbUtils = utils;
     }
 
-    ;
 
-    @GetMapping("/login")
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        RequestDispatcher requestDispatcher = req.getRequestDispatcher("/index.jsp");
-        requestDispatcher.forward(req, resp);
+    @GetMapping
+    protected String doGet(ModelAndView view) {
+        return "index";
     }
 
-    @PostMapping("/login")
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
+    @PostMapping
+    protected ModelAndView doPost(@RequestParam("username") String name, @RequestParam("password") String password, ModelAndView modelAndView) {
         try {
-            User user = dbUtils.findUserLogin(req.getParameter("username"));
+            User user = dbUtils.findUserLogin(name);
 
-            if (Objects.equals(user.getPassword(), req.getParameter("password"))) {
-                req.getSession().setAttribute("user", user);
-                resp.sendRedirect(req.getContextPath() + "/questions");
+            if (Objects.equals(user.getPassword(), password)) {
+                ModelAndView a = new ModelAndView("redirect:/questions");
+                a.addObject("user", new User(user));
+                return a;
+                // req.getSession().setAttribute("user", user);
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        return new ModelAndView("redirect:/questions");
     }
 
 }

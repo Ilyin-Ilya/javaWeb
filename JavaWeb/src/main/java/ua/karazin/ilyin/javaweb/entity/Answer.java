@@ -1,13 +1,16 @@
 package ua.karazin.ilyin.javaweb.entity;
 
+import org.springframework.stereotype.Component;
+
 import javax.persistence.*;
 import java.sql.Date;
 
+@Component
 @Entity
 @Table(name = "answer")
 public class Answer {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "answer_id")
     private int answer_id;
     @Column(name = "answer_body")
@@ -22,11 +25,11 @@ public class Answer {
     private boolean is_answer;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "author", referencedColumnName = "user_id")
+    @JoinColumn(name = "author", referencedColumnName = "user_id", insertable = false, updatable = false)
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "question_id", referencedColumnName = "question_id")
+    @JoinColumn(name = "question_id", referencedColumnName = "question_id", insertable = false, updatable = false)
     private Question question;
 
     public Answer(int answer_id, String answer_body, int author_id, Date date_answered, int question_id, boolean is_answer, User user, Question question) {

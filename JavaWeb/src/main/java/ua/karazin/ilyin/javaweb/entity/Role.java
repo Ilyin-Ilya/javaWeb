@@ -1,13 +1,16 @@
 package ua.karazin.ilyin.javaweb.entity;
 
+import org.springframework.stereotype.Component;
+
 import javax.persistence.*;
 import java.util.Collection;
 
+@Component
 @Entity
 @Table(name = "role")
 public class Role {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "role_id")
     private int id;
 

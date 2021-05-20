@@ -24,7 +24,7 @@ public class QuestionDisplay implements Serializable {
         this.sequence_number = question.getQuestion_id();
         this.question_title = question.getQuestion_name();
         this.author = utils.findAuthor(question).getLogin();
-        this.answers_number = utils.getSumOfAnswers(question);
+        this.answers_number = utils.getSumOfAnswers(question).intValue();
         if (!question.isStatus()) {
             this.status = "Open";
         } else {

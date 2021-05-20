@@ -1,14 +1,17 @@
 package ua.karazin.ilyin.javaweb.entity;
 
+import org.springframework.stereotype.Component;
+
 import javax.persistence.*;
 import java.util.Collection;
 
+@Component
 @Entity
 @Table(name = "users")
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private int id;
     @Column(name = "login")
@@ -26,6 +29,16 @@ public class User {
     @OneToMany(mappedBy = "author", fetch = FetchType.LAZY)
     private Collection<Question> questions;
 
+    public User() {
+    }
+
+    public User(int id, String login, String password, Role role) {
+        this.id = id;
+        this.login = login;
+        this.password = password;
+        this.role = role;
+    }
+
     public User(int id, String login, String password, Role role, Collection<Answer> answers, Collection<Question> questions) {
         this.id = id;
         this.login = login;
@@ -35,8 +48,15 @@ public class User {
         this.questions = questions;
     }
 
-    public User() {
+    public User(User user) {
+        this.id = user.id;
+        this.login = user.login;
+        this.password = user.password;
+        this.role = user.role;
+        this.answers = user.answers;
+        this.questions = user.questions;
     }
+
 
     public int getId() {
         return id;

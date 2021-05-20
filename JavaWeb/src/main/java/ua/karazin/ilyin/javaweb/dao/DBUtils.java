@@ -3,6 +3,7 @@ package ua.karazin.ilyin.javaweb.dao;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
+import org.springframework.stereotype.Repository;
 import ua.karazin.ilyin.javaweb.entity.Answer;
 import ua.karazin.ilyin.javaweb.entity.Question;
 import ua.karazin.ilyin.javaweb.entity.Role;
@@ -10,6 +11,7 @@ import ua.karazin.ilyin.javaweb.entity.User;
 
 import java.util.List;
 
+@Repository
 public class DBUtils {
 
     public boolean addQuestion(Question question) {
@@ -52,15 +54,15 @@ public class DBUtils {
 
     public List<Question> getAllQuestions() {
         Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
-        Query query = session.createQuery("from question");
+        Query query = session.createQuery("from Question");
         List list = query.list();
         return list;
     }
 
     public User findUserLogin(String login) {
         Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
-        Query query = session.createQuery("from users" +
-                "where users.login = :user_login");
+        Query query = session.createQuery("from User " +
+                "where login =: user_login", User.class);
         query.setParameter("user_login", login);
         User res = (User) query.getSingleResult();
         return res;
@@ -68,12 +70,17 @@ public class DBUtils {
 
     public User findAuthor(Question question) {
         Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
-        Query query = session.createQuery("from users" +
-                "inner join question" +
-                "where users.user_id = :author_id");
-        query.setParameter("author_id", question.getAuthor_id());
-        User res = (User) query.getSingleResult();
-        return res;
+        Query query = session.createQuery("from User as u" +
+                " inner join u.questions as q" +
+                " where q.author_id = :author_id");
+        query.setParameter("author_id", question.getAuthor().getId());
+        if (!query.list().isEmpty()) {
+            List list = query.list();
+            Object[] f = (Object[]) query.getSingleResult();
+            User res = (User) f[0];
+            return res;
+        }
+        return null;
     }
 
     public Role findRole(User user) {
@@ -86,11 +93,13 @@ public class DBUtils {
         return res;
     }
 
-    public Integer getSumOfAnswers(Question question) {
+    public Long getSumOfAnswers(Question question) {
         Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
-        Query query = session.createQuery("select count(*) from answer \n" +
-                "INNER JOIN question ON");
-        Integer res = (Integer) query.getSingleResult();
+        Query query = session.createQuery("select count(*) from Answer a \n" +
+                "INNER JOIN a.question");
+        List list = query.list();
+        Object f = query.getSingleResult();
+        Long res = (Long) f;
         return res;
     }
 
