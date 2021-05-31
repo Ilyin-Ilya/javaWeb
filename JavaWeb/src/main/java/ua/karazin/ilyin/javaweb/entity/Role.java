@@ -20,15 +20,6 @@ public class Role {
     @OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
     private Collection<User> users;
 
-    public Role() {
-    }
-
-    public Role(int id, String title, Collection<User> users) {
-        this.id = id;
-        this.title = title;
-        this.users = users;
-    }
-
     public int getId() {
         return id;
     }
@@ -50,6 +41,15 @@ public class Role {
     }
 
     public void setUsers(Collection<User> users) {
+        this.users = users;
+    }
+
+    public Role() {
+    }
+
+    public Role(int id, String title, Collection<User> users) {
+        this.id = id;
+        this.title = title;
         this.users = users;
     }
 }

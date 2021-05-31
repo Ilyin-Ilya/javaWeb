@@ -1,7 +1,6 @@
 package ua.karazin.ilyin.javaweb.web.servlet;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -12,7 +11,7 @@ import ua.karazin.ilyin.javaweb.entity.User;
 import javax.servlet.ServletException;
 import java.io.IOException;
 
-@Controller
+@RestController
 @RequestMapping("/register")
 public class RegistrationServlet {
 

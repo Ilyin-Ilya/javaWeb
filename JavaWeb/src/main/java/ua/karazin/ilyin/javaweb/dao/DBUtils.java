@@ -9,6 +9,7 @@ import ua.karazin.ilyin.javaweb.entity.Question;
 import ua.karazin.ilyin.javaweb.entity.Role;
 import ua.karazin.ilyin.javaweb.entity.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -109,6 +110,18 @@ public class DBUtils {
                 "where question.question_id = :question_id");
         query.setParameter("question_id", question_id);
         Question res = (Question) query.getSingleResult();
+        return res;
+    }
+
+    public ArrayList<User> getAllUsers() {
+        Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession();
+
+        Query query = session.createQuery("FROM User");
+        ArrayList<User> res = new ArrayList<>();
+        List<Object> quer = query.getResultList();
+        for (Object q : quer) {
+            res.add((User) q);
+        }
         return res;
     }
 

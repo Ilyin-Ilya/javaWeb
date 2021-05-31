@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import ua.karazin.ilyin.javaweb.dao.DBUtils;
 import ua.karazin.ilyin.javaweb.entity.User;
@@ -13,7 +13,7 @@ import ua.karazin.ilyin.javaweb.entity.User;
 import java.util.Objects;
 
 @Controller
-@RequestMapping("/login")
+@RestController("/login")
 public class AuthenticationServlet {
 
     private DBUtils dbUtils;
